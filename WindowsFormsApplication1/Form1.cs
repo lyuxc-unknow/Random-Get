@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.IO;
+using System.Drawing;
 
 namespace WindowsFormsApplication1
 {
@@ -25,6 +26,7 @@ namespace WindowsFormsApplication1
                 }
                 sr.Close ();
                 fs.Close ();
+                textBox1.Text = "";
             }
         }
 
@@ -45,7 +47,41 @@ namespace WindowsFormsApplication1
         {
             int a = listBox1.Items.Count;
             Random random = new Random ();
-            label1.Text = listBox1.Items[random.Next (a)].ToString ();
+            label1.Text = "题目:" + listBox1.Items[random.Next (a)].ToString() + ",组号:" + random.Next(int.Parse(textBox2.Text));
+        }
+
+        private void listBox1_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            e.DrawBackground();
+            if (e.Index >= 0)
+            {
+                e.Graphics.DrawString(listBox1.Items[e.Index].ToString(), e.Font, new SolidBrush(e.ForeColor), e.Bounds);
+                if (e.Index < listBox1.Items.Count - 1)
+                {
+                    e.Graphics.DrawLine(new Pen(Color.Gray), e.Bounds.Left - 10, e.Bounds.Bottom - 1, e.Bounds.Right - 10, e.Bounds.Bottom - 1);
+                }
+            }
+            e.DrawFocusRectangle();
+        }
+
+        private void textBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if(textBox1.Text == "请输入内容，回车添加")
+            {
+                textBox1.Text = string.Empty;
+                textBox1.Font = new Font(textBox1.Font, FontStyle.Regular);
+                textBox1.ForeColor = Color.Black;
+            }
+        }
+
+        private void textBox1_Leave(object sender, EventArgs e)
+        {
+            if(textBox1.Text == string.Empty || textBox1.Text == "\r\n" || textBox1.Text == "")
+            {
+                textBox1.Text = "请输入内容，回车添加";
+                textBox1.Font = new Font(textBox1.Font, FontStyle.Italic);
+                textBox1.ForeColor = Color.Gray;
+            }
         }
     }
 }
